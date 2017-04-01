@@ -22,7 +22,7 @@ public class FreemarkerUtil {
 		cfg = new Configuration(Configuration.VERSION_2_3_23);
 		// 设定去哪里读取相应的ftl模板文件
 		cfg.setClassForTemplateLoading(FreemarkerUtil.class, CommonConfig.VIEW_PRIFEX);
-		cfg.setDefaultEncoding("UTF-8");
+		cfg.setDefaultEncoding(CommonConfig.VIEW_RESOLVER_CHARSET);
 		cfg.setTemplateExceptionHandler(TemplateExceptionHandler.RETHROW_HANDLER);
 		cfg.setLogTemplateExceptions(true);
 	}
@@ -48,6 +48,7 @@ public class FreemarkerUtil {
 		try {
 			// 通过一个文件输出流，就可以写到相应的文件中，此处用的是绝对路径
 			Template temp = this.getTemplate(name);
+			response.setCharacterEncoding("UTF-8");
 			temp.process(modelMap, response.getWriter());
 		} catch (Exception e) {
 			log.error(name + "的文件解析异常");
