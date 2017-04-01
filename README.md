@@ -19,8 +19,7 @@
 **增加项目依赖:**
 
 ```
-mvc-parent:https://git.oschina.net/hongliangsun/mvc-parent.git
-it-util:https://git.oschina.net/hongliangsun/it-util.git
+https://git.oschina.net/hongliangsun/mvc.git
 ```
 
 **在web.xml增加：**
@@ -43,9 +42,10 @@ it-util:https://git.oschina.net/hongliangsun/it-util.git
 e2u.mvc.compan.basepackage=cn
 #静态资源的配置
 e2u.mvc.static.resources=
-#视图配置
-e2u.mvc.view.prefix=/WEB-INF/page/
-e2u.mvc.view.suffix=.jsp
+#视图配置(集成Freemarker配置)
+e2u.mvc.view.prefix=/WEB-INF/page
+e2u.mvc.view.suffix=.ftl
+e2u.mvc.view.charset=UTF-8
 ```
 **控制器（Controllers）:**
 
@@ -103,4 +103,4 @@ public String addUser(Map<String,Object> map,@ModelAttribute User user) {
 **视图（Views）**
 目前只使用能解析JSP以及使用default展示静态Html等文件。通过${user}实现对域对象内容的获取。
 
-具体使用案例可以看：https://git.oschina.net/hongliangsun/mvc-demo.git
+具体使用案例可以看：mvc-demo项目

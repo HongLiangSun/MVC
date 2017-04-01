@@ -5,6 +5,6 @@
 </head>
 <body>
 	</form>
-	<p style="font-size: 18px; color: blue;">hello:${user}${us}</p>
+	<p style="font-size: 18px; color: blue;">hello:${user}${us!}</p>
 </body>
 </html>

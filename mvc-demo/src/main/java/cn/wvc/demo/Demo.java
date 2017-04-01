@@ -11,7 +11,7 @@ public class Demo {
 
 	@RequestMapping("/getUser")
 	public String getUesr(Map<String, Object> map,@RequestParam(value = "userName") String userName) {
-		map.put("user", "sunhongliang");
+		map.put("user", userName);
 		return "hello";
 	}
 

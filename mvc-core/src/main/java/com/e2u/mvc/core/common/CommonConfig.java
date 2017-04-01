@@ -21,15 +21,15 @@ public class CommonConfig {
 	public static String VIEW_PRIFEX;
 	// 视图后缀
 	public static String VIEW_SUFFIX;
-	// 视图解析器类
-	public static String VIEW_RESOLVER;
+	// 视图编码
+	public static String VIEW_RESOLVER_CHARSET;
 	//静态资源路径(例如：html,js,image,css)
 	public static String STATIC_RESOURCE;
 
 	public static final String BASE_PACKAGE_KEY = "e2u.mvc.compan.basepackage";
 	public static final String VIEW_PRIFEX_KEY = "e2u.mvc.view.prefix";
 	public static final String VIEW_SUFFIXE_KEY = "e2u.mvc.view.suffix";
-	public static final String VIEW_RESOLVER_KEY = "e2u.mvc.view.resolver";
+	public static final String VIEW_RESOLVER_CHARSET_KEY = "e2u.mvc.view.charset";
 	public static String STATIC_RESOURCE_KEY = "e2u.mvc.static.resources";
 
 	private static Logger log = Logger.getLogger(CommonConfig.class);
@@ -44,7 +44,7 @@ public class CommonConfig {
 			BASE_PACKAGE = properties.getProperty(BASE_PACKAGE_KEY, "");
 			VIEW_PRIFEX = properties.getProperty(VIEW_PRIFEX_KEY, "");
 			VIEW_SUFFIX = properties.getProperty(VIEW_SUFFIXE_KEY, "");
-			VIEW_RESOLVER = properties.getProperty(VIEW_RESOLVER_KEY, "");
+			VIEW_RESOLVER_CHARSET = properties.getProperty(STATIC_RESOURCE_KEY, "UTF-8");
 			STATIC_RESOURCE=properties.getProperty(STATIC_RESOURCE_KEY,"");
 			log.info("读取配置文件内容结束。");
 		} catch (Exception e) {
