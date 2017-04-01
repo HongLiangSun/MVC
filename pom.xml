@@ -14,6 +14,7 @@
 		<servlet.version>3.1.0</servlet.version>
 		<log4j.version>1.2.17</log4j.version>
 		<itutil.version>0.0.1-SNAPSHOT</itutil.version>
+		<freemarker.version>2.3.23</freemarker.version>
 	</properties>
 
 	<dependencyManagement>
@@ -38,6 +39,11 @@
 				<groupId>com.shell.util</groupId>
 				<artifactId>it-util</artifactId>
 				<version>${itutil.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.freemarker</groupId>
+				<artifactId>freemarker</artifactId>
+				<version>${freemarker.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>

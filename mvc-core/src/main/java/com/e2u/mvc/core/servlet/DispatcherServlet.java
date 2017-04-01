@@ -23,6 +23,7 @@ import com.e2u.mvc.core.entity.RequestWrap;
 import com.e2u.mvc.core.factory.BeanFactory;
 import com.e2u.mvc.core.handler.RequestMappingHandler;
 import com.e2u.mvc.core.handler.ViewHandler;
+import com.e2u.mvc.core.util.FreemarkerUtil;
 import com.e2u.mvc.core.view.LocationResolver;
 /**
  * 
@@ -108,7 +109,7 @@ public class DispatcherServlet extends HttpServlet{
 					if(StringUtils.isEmpty(CommonConfig.VIEW_RESOLVER)){
 						new LocationResolver().viewResolver(request, response, modelAndView);
 					}else{
-						//TODO
+						FreemarkerUtil.getFreemarker().fprint(modelAndView.getView().getName() + modelAndView.getView().getSuffix(), modelAndView.getModelMap(), response);
 					}
 				}
 			}
