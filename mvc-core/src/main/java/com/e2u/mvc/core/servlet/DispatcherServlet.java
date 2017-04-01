@@ -23,7 +23,7 @@ import com.e2u.mvc.core.entity.RequestWrap;
 import com.e2u.mvc.core.factory.BeanFactory;
 import com.e2u.mvc.core.handler.RequestMappingHandler;
 import com.e2u.mvc.core.handler.ViewHandler;
-import com.e2u.mvc.core.util.FreemarkerUtil;
+import com.e2u.mvc.core.view.FreemarkerResolver;
 import com.e2u.mvc.core.view.LocationResolver;
 /**
  * 
@@ -37,6 +37,9 @@ public class DispatcherServlet extends HttpServlet{
 	private RequestMappingHandler requestMappingHandler = RequestMappingHandler.getRequestMappingHandler();
 	
 	private Logger log = Logger.getLogger(DispatcherServlet.class);
+	
+	private static LocationResolver locationResolver = new LocationResolver();
+	private static FreemarkerResolver freemarkerResolver = new FreemarkerResolver();
 	
 	private static final String DEFAULT_SERVLET = "default";
 	
@@ -105,11 +108,11 @@ public class DispatcherServlet extends HttpServlet{
 						log.error("json数据转换出错", e);
 					}
 				}else{
-					//没有配置时候使用默认的视图解析器
-					if(StringUtils.isEmpty(CommonConfig.VIEW_RESOLVER)){
-						new LocationResolver().viewResolver(request, response, modelAndView);
-					}else{
-						FreemarkerUtil.getFreemarker().fprint(modelAndView.getView().getName() + modelAndView.getView().getSuffix(), modelAndView.getModelMap(), response);
+					//没有配置时候使用默认的视图解析器(没有配置视图解析器的时候使用JSP解析器，其余Freemarker)
+					if(CommonConfig.VIEW_SUFFIX.endsWith("ftl")){
+						freemarkerResolver.viewResolver(request, response, modelAndView);
+					}else if(CommonConfig.VIEW_SUFFIX.endsWith("jsp")){
+						locationResolver.viewResolver(request, response, modelAndView);
 					}
 				}
 			}

@@ -15,6 +15,6 @@ abstract class ViewResolver {
 	/**
 	 * 将逻辑视图渲染成物理视图
 	 */
-	public abstract void viewResolver(ServletRequest request,ServletResponse response, ModelAndView modelAndView) throws Exception;
+	public abstract void viewResolver(ServletRequest request,ServletResponse response, ModelAndView modelAndView);
 
 }

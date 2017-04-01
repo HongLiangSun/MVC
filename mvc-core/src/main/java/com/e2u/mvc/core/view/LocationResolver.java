@@ -20,14 +20,18 @@ import com.e2u.mvc.core.entity.ModelAndView;
 public class LocationResolver extends ViewResolver {
 
 	@Override
-	public void viewResolver(ServletRequest request, ServletResponse response,ModelAndView modelAndView) throws ServletException, IOException {
+	public void viewResolver(ServletRequest request, ServletResponse response,ModelAndView modelAndView){
 		View view = modelAndView.getView();
 		Map<String, Object> modelMap = modelAndView.getModelMap();
 		// 遍历modelMap将将值存储到request域对象中
 		modelMap.forEach((key,value) -> request.setAttribute(key, modelMap.get(key)));
 		// 获取物理视图路径
 		String resourcePath = getResourcePath(view);
-		request.getRequestDispatcher(resourcePath).forward(request, response);
+		try {
+			request.getRequestDispatcher(resourcePath).forward(request, response);
+		} catch (ServletException | IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 	/**

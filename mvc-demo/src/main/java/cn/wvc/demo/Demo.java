@@ -10,8 +10,7 @@ import com.e2u.mvc.core.annotation.RequestParam;
 public class Demo {
 
 	@RequestMapping("/getUser")
-	public String getUesr(Map<String, Object> map,
-			@RequestParam(value = "userName") String userName) {
+	public String getUesr(Map<String, Object> map,@RequestParam(value = "userName") String userName) {
 		map.put("user", "sunhongliang");
 		return "hello";
 	}
