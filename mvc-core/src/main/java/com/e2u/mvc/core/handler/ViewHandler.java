@@ -112,7 +112,6 @@ public class ViewHandler {
 		    	}
 		    	if(paramVal==null && requestParam.required()){
 		    		logger.error("需要的参数【"+paramName+"】没有传递");
-		    		throw new Exception("需要的参数【"+paramName+"】没有传递");
 		    	}
 		    	values.add(paramVal);
 			}
