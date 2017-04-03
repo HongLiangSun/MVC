@@ -45,7 +45,6 @@ public class BeanFactory {
 		logger.info("初始化BeansFactory start ....");
 		//解析注解中的Beans
 		Set<Class<?>> classSet = ClassUtils.getAllClassesByPackage(CommonConfig.BASE_PACKAGE, Controller.class,Component.class,Service.class);
-		//从配置文件中解析Beans
 		for(Class<?> clazz : classSet){
 			if(beans.get(clazz) == null){
 				beans.put(clazz, clazz.newInstance());

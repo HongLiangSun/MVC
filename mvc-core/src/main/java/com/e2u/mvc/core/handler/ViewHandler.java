@@ -6,6 +6,7 @@ import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +16,10 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
+import cn.util.provide.DateUtils;
 import cn.util.provide.StringUtils;
 
+import com.e2u.mvc.core.annotation.DatePattern;
 import com.e2u.mvc.core.annotation.ModelAttribute;
 import com.e2u.mvc.core.annotation.RequestParam;
 import com.e2u.mvc.core.annotation.ResponseBody;
@@ -126,16 +129,24 @@ public class ViewHandler {
 	private Object bindModelAttributeParam(String baseName,HttpServletRequest req, Class<?> type)throws InstantiationException, IllegalAccessException {
 		Object newInstance = null;
 		Field[] fields = type.getDeclaredFields();
-		String[] val = {};
+		String[] val = null;
 		newInstance = type.newInstance();
 		for(Field f : fields){
 			f.setAccessible(true);
+			Class<?> fileType = f.getType();
 			String name = f.getName();
 			val = req.getParameterValues((StringUtils.isEmpty(baseName)?name:(baseName+"."+name)));
- 			val = (val == null) ? new String[1] :val;
-			Class<?> fileType = f.getType();
+ 			if(val == null || val.length <= 0){
+				val = new String[1];
+				if(fileType.isPrimitive()){
+					val[0] = "0";
+				}
+ 			}
 			if(fileType == String.class){
 				f.set(newInstance,val[0]);
+			}else if(fileType == Date.class){
+				DatePattern datePattern = f.getAnnotation(DatePattern.class);
+				f.set(newInstance,DateUtils.str2Date(val[0], datePattern == null ? "yyyy-MM-dd" :datePattern.value()));
 			}else if(fileType == Integer.class || fileType == int.class){
 				f.set(newInstance,Integer.valueOf(val[0]));
 			}else if(fileType == Double.class || fileType == double.class){

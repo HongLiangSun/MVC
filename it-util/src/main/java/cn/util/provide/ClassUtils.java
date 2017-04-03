@@ -192,10 +192,11 @@ public class ClassUtils {
 		Set<Class<?>> clazzs = getAllClassesByPackage(basePackage);
 		Set<Class<?>> result = new HashSet<Class<?>>();
 		for(Class<?> clazz : clazzs){
+			lable:
 			for(Class<? extends Annotation> annotation : annotations){
 				if(clazz.isAnnotationPresent(annotation)){
 					result.add(clazz);
-					continue;
+					break lable;
 				}
 			}
 		}

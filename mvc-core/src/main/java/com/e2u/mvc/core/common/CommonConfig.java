@@ -7,7 +7,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import com.e2u.mvc.core.annotation.Controller;
-import com.e2u.mvc.core.view.ViewResolverFactory;
+import com.e2u.mvc.core.factory.ViewResolverFactory;
 
 /**
  * 

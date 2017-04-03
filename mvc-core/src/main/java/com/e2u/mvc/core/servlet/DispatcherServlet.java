@@ -21,10 +21,10 @@ import com.e2u.mvc.core.entity.ModelAndView;
 import com.e2u.mvc.core.entity.RequestBody;
 import com.e2u.mvc.core.entity.RequestWrap;
 import com.e2u.mvc.core.factory.BeanFactory;
+import com.e2u.mvc.core.factory.ViewResolverFactory;
 import com.e2u.mvc.core.handler.RequestMappingHandler;
 import com.e2u.mvc.core.handler.ViewHandler;
 import com.e2u.mvc.core.view.ViewResolver;
-import com.e2u.mvc.core.view.ViewResolverFactory;
 
 /**
  * 
@@ -114,7 +114,7 @@ public class DispatcherServlet extends HttpServlet {
 				log.error("json数据转换出错", e);
 			}
 		}
-		// 没有配置时候使用默认的视图解析器(没有配置视图解析器的时候使用JSP解析器，其余Freemarker)
+		// 没有配置时候使用默认的视图解析器(没有配置视图解析器的时候使用JSP解析器，其余用Freemarker视图解析器)
 		if (viewResolver == null) {
 			viewResolver = ViewResolverFactory.getViewResolver(CommonConfig.VIEW_RESOLEVER_NAME);
 		}
