@@ -46,6 +46,7 @@ e2u.mvc.static.resources=
 e2u.mvc.view.prefix=/WEB-INF/page
 e2u.mvc.view.suffix=.ftl
 e2u.mvc.view.charset=UTF-8
+e2u.mvc.view.resolever.name=fremarkerViewResolver
 ```
 **控制器（Controllers）:**
 

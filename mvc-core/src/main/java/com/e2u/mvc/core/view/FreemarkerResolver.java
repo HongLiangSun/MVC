@@ -6,11 +6,11 @@ import javax.servlet.ServletResponse;
 import com.e2u.mvc.core.entity.ModelAndView;
 import com.e2u.mvc.core.util.FreemarkerUtil;
 
-public class FreemarkerResolver extends ViewResolver {
+public class FreemarkerResolver implements ViewResolver {
 
-	@Override
 	public void viewResolver(ServletRequest request, ServletResponse response,ModelAndView modelAndView) {
-		FreemarkerUtil.getFreemarker().fprint(modelAndView.getView().getName()+ modelAndView.getView().getSuffix(),modelAndView.getModelMap(), response);
+		View view = modelAndView.getView();
+		FreemarkerUtil.getFreemarker().fprint(view.getName()+ view.getSuffix(),modelAndView.getModelMap(), response);
 	}
 
 }

@@ -10,7 +10,7 @@ import com.e2u.mvc.core.entity.ModelAndView;
  * 
  * @author shell
  */
-abstract class ViewResolver {
+public interface ViewResolver {
 
 	/**
 	 * 将逻辑视图渲染成物理视图

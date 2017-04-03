@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.util.Map;
 
 import javax.servlet.ServletResponse;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
 
@@ -48,8 +49,13 @@ public class FreemarkerUtil {
 		try {
 			// 通过一个文件输出流，就可以写到相应的文件中，此处用的是绝对路径
 			Template temp = this.getTemplate(name);
-			response.setCharacterEncoding("UTF-8");
-			temp.process(modelMap, response.getWriter());
+			if(temp == null){
+				if(response instanceof HttpServletResponse) 
+					((HttpServletResponse)response).sendError(404);
+			}else{
+				response.setCharacterEncoding(CommonConfig.VIEW_RESOLVER_CHARSET);
+				temp.process(modelMap, response.getWriter());
+			}
 		} catch (Exception e) {
 			log.error(name + "的文件解析异常");
 		}

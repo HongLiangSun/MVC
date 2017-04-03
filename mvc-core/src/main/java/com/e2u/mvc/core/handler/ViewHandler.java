@@ -112,7 +112,7 @@ public class ViewHandler {
 		    	}
 		    	if(paramVal==null && requestParam.required()){
 		    		logger.error("需要的参数【"+paramName+"】没有传递");
-		    		res.sendError(400,"需要的参数【"+paramName+"】没有传递");
+		    		res.sendError(400);
 		    	}
 		    	values.add(paramVal);
 			}

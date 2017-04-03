@@ -7,6 +7,7 @@ import java.util.Properties;
 import org.apache.log4j.Logger;
 
 import com.e2u.mvc.core.annotation.Controller;
+import com.e2u.mvc.core.view.ViewResolverFactory;
 
 /**
  * 
@@ -25,13 +26,15 @@ public class CommonConfig {
 	public static String VIEW_RESOLVER_CHARSET;
 	//静态资源路径(例如：html,js,image,css)
 	public static String STATIC_RESOURCE;
-
+	//视图解析器名字
+	public static String VIEW_RESOLEVER_NAME;
+	
 	public static final String BASE_PACKAGE_KEY = "e2u.mvc.compan.basepackage";
 	public static final String VIEW_PRIFEX_KEY = "e2u.mvc.view.prefix";
 	public static final String VIEW_SUFFIXE_KEY = "e2u.mvc.view.suffix";
 	public static final String VIEW_RESOLVER_CHARSET_KEY = "e2u.mvc.view.charset";
-	public static String STATIC_RESOURCE_KEY = "e2u.mvc.static.resources";
-
+	public static final String STATIC_RESOURCE_KEY = "e2u.mvc.static.resources";
+	public static final String VIEW_RESOLEVER_NAME_KEY = "e2u.mvc.view.resolever.name";
 	private static Logger log = Logger.getLogger(CommonConfig.class);
 
 	public static void initConfig() {
@@ -46,6 +49,7 @@ public class CommonConfig {
 			VIEW_SUFFIX = properties.getProperty(VIEW_SUFFIXE_KEY, "");
 			VIEW_RESOLVER_CHARSET = properties.getProperty(STATIC_RESOURCE_KEY, "UTF-8");
 			STATIC_RESOURCE=properties.getProperty(STATIC_RESOURCE_KEY,"");
+			VIEW_RESOLEVER_NAME=properties.getProperty(VIEW_RESOLEVER_NAME_KEY, ViewResolverFactory.LOCAL_VIEW_RESOLVER_NAME);
 			log.info("读取配置文件内容结束。");
 		} catch (Exception e) {
 			log.error("配置文件读取异常【检查是否含有dispatcher.properties】", e);

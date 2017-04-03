@@ -17,7 +17,7 @@ import com.e2u.mvc.core.entity.ModelAndView;
  * @author shell
  *
  */
-public class LocationResolver extends ViewResolver {
+public class LocationResolver implements ViewResolver {
 
 	@Override
 	public void viewResolver(ServletRequest request, ServletResponse response,ModelAndView modelAndView){
