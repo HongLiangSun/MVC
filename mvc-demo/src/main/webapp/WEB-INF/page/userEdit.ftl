@@ -5,9 +5,9 @@
 </head>
 <body>
 	<form action="/addUser" method ="Post" >
-		UserID:<input type="text" name="id" value="" /><br>
-		User年龄:<input type="text" name="age" value="" /><br>
-		User入学时间<input type="text" name="inSchool" value="" /><br>
+		UserID:<input type="text" name="id"  /><br>
+		User年龄:<input type="text" name="age"  /><br>
+		User入学时间<input type="text" name="inSchool"  /><br>
 		<input type="submit" value="保存" />
 	</form>
 </body>

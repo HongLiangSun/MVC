@@ -38,6 +38,7 @@ public class DispatcherServlet extends HttpServlet {
 	private static ViewResolver viewResolver = null;
 	private static final String DEFAULT_SERVLET = "default";
 	private static final String REDIRECT_PREFIX = "rd:";
+	private static final ViewHandler viewHandler = new ViewHandler();
 
 	/**
 	 * 进行初始化操作
@@ -88,7 +89,7 @@ public class DispatcherServlet extends HttpServlet {
 		ModelAndView modelAndView = null;
 		try {
 			// 根据映射对象获取视图
-			modelAndView = new ViewHandler().getModelAndView(request, response,requestMapping);
+			modelAndView = viewHandler.getModelAndView(request, response,requestMapping);
 		} catch (Exception e) {
 			log.error("获取modelAndView出错", e);
 			response.sendError(400);

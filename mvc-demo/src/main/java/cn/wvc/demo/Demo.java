@@ -18,21 +18,21 @@ public class Demo {
 
 	@Autowired
 	private UserApi userApi;
-	
+
 	@RequestMapping("/userEdit")
 	public String page() {
 		return "userEdit";
 	}
-	
+
 	@RequestMapping("/getUser")
-	public String getUesr(Map<String, Object> map,@RequestParam String uid) {
+	public String getUesr(Map<String, Object> map, @RequestParam String uid) {
 		map.put("user", userApi.findUserById(uid));
 		return "userinfo";
 	}
-	
-	@RequestMapping(value="/addUser", method = RequestType.POST)
+
+	@RequestMapping(value = "/addUser", method = RequestType.POST)
 	@ResponseBody
-	public User addUesr(Map<String, Object> map,@ModelAttribute User user) {
+	public User addUesr(Map<String, Object> map, @ModelAttribute User user) {
 		return user;
 	}
 

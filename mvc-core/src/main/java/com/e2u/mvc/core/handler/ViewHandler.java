@@ -1,6 +1,6 @@
 package com.e2u.mvc.core.handler;
 
-import java.lang.reflect.Field;
+import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -10,14 +10,12 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.apache.log4j.Logger;
-
-import cn.util.provide.DateUtils;
-import cn.util.provide.StringUtils;
 
 import com.e2u.mvc.core.annotation.DatePattern;
 import com.e2u.mvc.core.annotation.ModelAttribute;
@@ -29,8 +27,15 @@ import com.e2u.mvc.core.entity.RequestBody;
 import com.e2u.mvc.core.factory.BeanFactory;
 import com.e2u.mvc.core.view.View;
 
+import cn.util.provide.BeanUtils;
+import cn.util.provide.DateUtils;
+import cn.util.provide.StringUtils;
+
 public class ViewHandler {
+	
 	private Logger logger = Logger.getLogger(ViewHandler.class);
+	private static ConcurrentHashMap<Class<?>, Object> beanMap = new ConcurrentHashMap<>();
+	
 	public ModelAndView getModelAndView(HttpServletRequest req ,HttpServletResponse res, RequestBody requestMapping) throws Exception {
 		Map<String, Object> modelMap = new HashMap<String, Object>();
 		//获取映射关系对应的Class对象
@@ -127,42 +132,44 @@ public class ViewHandler {
 	 * 绑定modelAttributeParam对象
 	 */
 	private Object bindModelAttributeParam(String baseName,HttpServletRequest req, Class<?> type)throws InstantiationException, IllegalAccessException {
-		Object newInstance = null;
-		Field[] fields = type.getDeclaredFields();
+		Object newInstance = beanMap.get(type);
+		PropertyDescriptor[] propertys = BeanUtils.getAllProperty(type, Object.class);
 		String[] val = null;
-		newInstance = type.newInstance();
-		for(Field f : fields){
-			f.setAccessible(true);
-			Class<?> fileType = f.getType();
-			String name = f.getName();
-			val = req.getParameterValues((StringUtils.isEmpty(baseName)?name:(baseName+"."+name)));
+		if(newInstance == null){
+			newInstance = type.newInstance();
+			beanMap.put(type, newInstance);
+		}
+		for(PropertyDescriptor property : propertys){
+			Class<?> propertyType = property.getPropertyType();
+			String propertyName = property.getName();
+			val = req.getParameterValues((StringUtils.isEmpty(baseName)?propertyName:(baseName+"."+propertyName)));
  			if(val == null || val.length <= 0){
 				val = new String[1];
-				if(fileType.isPrimitive()){
+				if(propertyType.isPrimitive()){
 					val[0] = "0";
 				}
  			}
-			if(fileType == String.class){
-				f.set(newInstance,val[0]);
-			}else if(fileType == Date.class){
-				DatePattern datePattern = f.getAnnotation(DatePattern.class);
-				f.set(newInstance,DateUtils.str2Date(val[0], datePattern == null ? "yyyy-MM-dd" :datePattern.value()));
-			}else if(fileType == Integer.class || fileType == int.class){
-				f.set(newInstance,Integer.valueOf(val[0]));
-			}else if(fileType == Double.class || fileType == double.class){
-				f.set(newInstance,Double.valueOf(val[0]));
-			}else if(fileType == Byte.class || fileType == byte.class){
-				f.set(newInstance,Byte.valueOf(val[0]));
-			}else if(fileType == Boolean.class || fileType == boolean.class){
-				f.set(newInstance,Boolean.valueOf(val[0]));
-			}else if(fileType == Short.class || fileType == short.class){
-				f.set(newInstance,Short.valueOf(val[0]));
-			}else if(fileType == List.class){
-				f.set(newInstance, Arrays.asList(val));
-			}else if(fileType == String[].class){
-				f.set(newInstance, val);
+			if(propertyType == String.class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName, val[0]);
+			}else if(propertyType == Date.class){
+				DatePattern datePattern = propertyType.getAnnotation(DatePattern.class);
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,DateUtils.str2Date(val[0], datePattern == null ? "yyyy-MM-dd" :datePattern.value()));
+			}else if(propertyType == Integer.class || propertyType == int.class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,Integer.valueOf(val[0]));
+			}else if(propertyType == Double.class || propertyType == double.class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,Double.valueOf(val[0]));
+			}else if(propertyType == Byte.class || propertyType == byte.class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,Byte.valueOf(val[0]));
+			}else if(propertyType == Boolean.class || propertyType == boolean.class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,Boolean.valueOf(val[0]));
+			}else if(propertyType == Short.class || propertyType == short.class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,Short.valueOf(val[0]));
+			}else if(propertyType == List.class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,Arrays.asList(val));
+			}else if(propertyType == String[].class){
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,val);
 			}else{
-				f.set(newInstance,bindModelAttributeParam(StringUtils.isEmpty(baseName)?name:(baseName+"."+name),req, fileType));
+				BeanUtils.setProperty(newInstance, Object.class, propertyName,bindModelAttributeParam(StringUtils.isEmpty(baseName)?propertyName:(baseName+"."+propertyName),req, propertyType));
 			}
 		}
 		return newInstance;
