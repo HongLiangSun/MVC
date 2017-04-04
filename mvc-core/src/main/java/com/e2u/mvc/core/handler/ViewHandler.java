@@ -1,6 +1,7 @@
 package com.e2u.mvc.core.handler;
 
 import java.beans.PropertyDescriptor;
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.lang.reflect.Parameter;
@@ -10,7 +11,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -34,7 +34,6 @@ import cn.util.provide.StringUtils;
 public class ViewHandler {
 	
 	private Logger logger = Logger.getLogger(ViewHandler.class);
-	private static ConcurrentHashMap<Class<?>, Object> beanMap = new ConcurrentHashMap<>();
 	
 	public ModelAndView getModelAndView(HttpServletRequest req ,HttpServletResponse res, RequestBody requestMapping) throws Exception {
 		Map<String, Object> modelMap = new HashMap<String, Object>();
@@ -130,15 +129,13 @@ public class ViewHandler {
 
 	/**
 	 * 绑定modelAttributeParam对象
+	 * @throws InvocationTargetException 
+	 * @throws IllegalArgumentException 
 	 */
-	private Object bindModelAttributeParam(String baseName,HttpServletRequest req, Class<?> type)throws InstantiationException, IllegalAccessException {
-		Object newInstance = beanMap.get(type);
+	private Object bindModelAttributeParam(String baseName,HttpServletRequest req, Class<?> type)throws InstantiationException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		Object newInstance = type.newInstance();
 		PropertyDescriptor[] propertys = BeanUtils.getAllProperty(type, Object.class);
 		String[] val = null;
-		if(newInstance == null){
-			newInstance = type.newInstance();
-			beanMap.put(type, newInstance);
-		}
 		for(PropertyDescriptor property : propertys){
 			Class<?> propertyType = property.getPropertyType();
 			String propertyName = property.getName();
@@ -149,27 +146,28 @@ public class ViewHandler {
 					val[0] = "0";
 				}
  			}
+ 			Method method = BeanUtils.getPropertyWriterMethod(newInstance, Object.class, propertyName);
 			if(propertyType == String.class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName, val[0]);
+				method.invoke(newInstance, val[0]);
 			}else if(propertyType == Date.class){
 				DatePattern datePattern = propertyType.getAnnotation(DatePattern.class);
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,DateUtils.str2Date(val[0], datePattern == null ? "yyyy-MM-dd" :datePattern.value()));
+				method.invoke(newInstance, DateUtils.str2Date(val[0], datePattern == null ? "yyyy-MM-dd" :datePattern.value()));
 			}else if(propertyType == Integer.class || propertyType == int.class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,Integer.valueOf(val[0]));
+				method.invoke(newInstance,Integer.valueOf(val[0]));
 			}else if(propertyType == Double.class || propertyType == double.class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,Double.valueOf(val[0]));
+				method.invoke(newInstance,Double.valueOf(val[0]));
 			}else if(propertyType == Byte.class || propertyType == byte.class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,Byte.valueOf(val[0]));
+				method.invoke(newInstance,Byte.valueOf(val[0]));
 			}else if(propertyType == Boolean.class || propertyType == boolean.class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,Boolean.valueOf(val[0]));
+				method.invoke(newInstance,Boolean.valueOf(val[0]));
 			}else if(propertyType == Short.class || propertyType == short.class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,Short.valueOf(val[0]));
+				method.invoke(newInstance,Short.valueOf(val[0]));
 			}else if(propertyType == List.class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,Arrays.asList(val));
+				method.invoke(newInstance,Arrays.asList(val));
 			}else if(propertyType == String[].class){
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,val);
+				method.invoke(newInstance,(Object)val);
 			}else{
-				BeanUtils.setProperty(newInstance, Object.class, propertyName,bindModelAttributeParam(StringUtils.isEmpty(baseName)?propertyName:(baseName+"."+propertyName),req, propertyType));
+				method.invoke(newInstance,bindModelAttributeParam(StringUtils.isEmpty(baseName)?propertyName:(baseName+"."+propertyName),req, propertyType));
 			}
 		}
 		return newInstance;

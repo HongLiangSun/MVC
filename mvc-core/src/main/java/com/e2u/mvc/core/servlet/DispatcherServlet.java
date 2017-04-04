@@ -91,7 +91,7 @@ public class DispatcherServlet extends HttpServlet {
 			// 根据映射对象获取视图
 			modelAndView = viewHandler.getModelAndView(request, response,requestMapping);
 		} catch (Exception e) {
-			log.error("获取modelAndView出错", e);
+			log.debug(e);
 			response.sendError(400);
 			return;
 		}

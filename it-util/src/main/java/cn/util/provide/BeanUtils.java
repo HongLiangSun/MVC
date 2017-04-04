@@ -20,8 +20,7 @@ public class BeanUtils {
 		if(StringUtils.isEmpty(propertyName)) return false;
 		boolean flg = false;
 		try {
-			BeanInfo beanInfo = Introspector.getBeanInfo(bean.getClass(), stopClass);
-			PropertyDescriptor[] propertyDescriptors = beanInfo.getPropertyDescriptors();
+			PropertyDescriptor[] propertyDescriptors = getAllProperty(bean.getClass(), stopClass);
 			for(PropertyDescriptor p : propertyDescriptors){
 				if(propertyName.equals(p.getName())){
 					Method writeMethod = p.getWriteMethod();
@@ -43,5 +42,21 @@ public class BeanUtils {
 			e.printStackTrace();
 		}
 		return beanInfo == null ? null : beanInfo.getPropertyDescriptors();
+	}
+	
+	public static Method getPropertyWriterMethod(Object bean , Class<?> stopClass,String propertyName){
+		Method method = null;
+		try {
+			PropertyDescriptor[] propertyDescriptors = getAllProperty(bean.getClass(), stopClass);
+			for(PropertyDescriptor p : propertyDescriptors){
+				if(propertyName.equals(p.getName())){
+					method = p.getWriteMethod();
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return method;
 	}
 }

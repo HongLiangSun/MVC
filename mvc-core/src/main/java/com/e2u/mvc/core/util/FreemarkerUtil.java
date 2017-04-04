@@ -1,6 +1,7 @@
 package com.e2u.mvc.core.util;
 
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Map;
 
 import javax.servlet.ServletResponse;
@@ -46,6 +47,7 @@ public class FreemarkerUtil {
 	 * 输出HTML文件
 	 */
 	public void fprint(String name, Map<String, Object> modelMap, ServletResponse response) {
+		PrintWriter writer = null;
 		try {
 			// 通过一个文件输出流，就可以写到相应的文件中，此处用的是绝对路径
 			Template temp = this.getTemplate(name);
@@ -54,10 +56,16 @@ public class FreemarkerUtil {
 					((HttpServletResponse)response).sendError(404);
 			}else{
 				response.setCharacterEncoding(CommonConfig.VIEW_RESOLVER_CHARSET);
-				temp.process(modelMap, response.getWriter());
+				writer = response.getWriter();
+				writer.flush();
+				temp.process(modelMap, writer);
 			}
 		} catch (Exception e) {
 			log.error(name + "的文件解析异常");
+		}finally{
+			if(writer != null){
+				writer.close();
+			}
 		}
 	}
 	
