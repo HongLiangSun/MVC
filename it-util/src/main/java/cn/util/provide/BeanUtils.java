@@ -6,15 +6,18 @@ import java.beans.Introspector;
 import java.beans.PropertyDescriptor;
 import java.lang.reflect.Method;
 
-
+/**
+ * javaBean的操作工具
+ * @author honglinag.sun
+ *
+ */
 public class BeanUtils {
 	/**
-	 * 为bean对象属性赋值
+	 * 根据bean对象和属性名称设置对应的值
 	 * @param bean
 	 * @param stopClass
 	 * @param propertyName
 	 * @param propertyVal
-	 * @return hongliang.sun
 	 */
 	public static boolean setProperty(Object bean , Class<?> stopClass,String propertyName,Object propertyVal){
 		if(StringUtils.isEmpty(propertyName)) return false;
@@ -34,6 +37,12 @@ public class BeanUtils {
 		return flg;
 	}
 	
+	/**
+	 * 根据Bean类获取所有的属性
+	 * @param beanClass
+	 * @param stopClass
+	 * @return
+	 */
 	public static PropertyDescriptor[] getAllProperty(Class<?> beanClass,Class<?> stopClass){
 		BeanInfo beanInfo = null;
 		try {
@@ -44,6 +53,13 @@ public class BeanUtils {
 		return beanInfo == null ? null : beanInfo.getPropertyDescriptors();
 	}
 	
+	/**
+	 * 根据bean对象和属性名称获取对应的属性的写方法
+	 * @param bean
+	 * @param stopClass
+	 * @param propertyName
+	 * @return
+	 */
 	public static Method getPropertyWriterMethod(Object bean , Class<?> stopClass,String propertyName){
 		Method method = null;
 		try {
