@@ -11,6 +11,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -151,7 +152,8 @@ public class ViewHandler {
 				method.invoke(newInstance, val[0]);
 			}else if(propertyType == Date.class){
 				DatePattern datePattern = propertyType.getAnnotation(DatePattern.class);
-				method.invoke(newInstance, DateUtils.str2Date(val[0], datePattern == null ? "yyyy-MM-dd" :datePattern.value()));
+				Optional<Date> date = DateUtils.parseStr2Date(val[0], datePattern == null ? DateUtils.DATE_SHORT_FORMAT :datePattern.value());
+				method.invoke(newInstance, date.orElse(null));
 			}else if(propertyType == Integer.class || propertyType == int.class){
 				method.invoke(newInstance,Integer.valueOf(val[0]));
 			}else if(propertyType == Double.class || propertyType == double.class){
